@@ -1,23 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import Home from "./components/stranice/home/Home";
+import Tim from "./components/reusable/Tim";
+import { teamData } from "./components/data/TeamData";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
+  const [backgrounds, setBackgrounds] = useState([]);
+
+  useEffect(() => {
+    const bgrs = teamData.map((team) => {
+      return team.background;
+    });
+    setBackgrounds([...bgrs]);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={(props) => <Home backgrounds={backgrounds} />}
+          />
+          <Route
+            exact
+            path="/home"
+            render={(props) => {
+              return <Home backgrounds={backgrounds} />;
+            }}
+          />
+          <Route
+            exact
+            path="/tim/:id"
+            render={(props) => {
+              const id = props.match.params.id;
+              return <Tim tim={teamData[id]} />;
+            }}
+          ></Route>
+        </Switch>
+      </Router>
     </div>
   );
 }
